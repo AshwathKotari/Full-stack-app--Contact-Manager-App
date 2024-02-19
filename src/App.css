@@ -1,0 +1,20 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+
+.listitems{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.listitemsnames-div{
+  margin-left: 30px;
+}
+

@@ -1,0 +1,79 @@
+// App.js
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+function App() {
+  const [name, setName] = useState('');
+  const [names,setnames]=useState([]);
+
+  useEffect(()=>{
+    fetchNames();
+  },[]);
+
+  const fetchNames =async()=>{
+    try {
+      
+      const response = await axios.get('http://localhost:5003/api/users')
+      setnames(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error fetching names:', error);
+    }
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+   
+      
+      await axios.post('http://localhost:5003/api/users', { name });
+      console.log('Name sent successfully');
+   
+      setName(''); // Clear the input field after submission
+      fetchNames();
+    } catch (error) {
+      console.error('Error sending name:', error);
+    }
+    console.log(name)
+  };
+
+  // const handleEdit = (id, oldName) => {
+  //   setEditingId(id);
+  //   setName(oldName);
+  // };
+
+  const handleDelete= async(id)=>{
+    try {
+      await axios.delete(`http://localhost:5003/api/users/${id}`);
+      console.log('Name deleted successfully');
+      fetchNames();
+    } catch (error) {
+      console.error('Error deleting name:', error);
+    }
+  }
+  return (
+    <div>
+      <h1>Contact Names!</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+        />
+        <button type="submit">Submit</button>
+      </form>
+      <h2>Contacts:</h2>
+      <ul>
+        {names.map((name) => (
+          <li key={name._id}>
+            {name.name}
+            <button onClick={() => handleEdit(name._id, name.name)}>Edit</button>
+            <button onClick={() => handleDelete(name._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export default App;
